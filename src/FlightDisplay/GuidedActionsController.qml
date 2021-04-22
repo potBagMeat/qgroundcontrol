@@ -54,6 +54,7 @@ Item {
     readonly property string vtolTransitionTitle:           qsTr("VTOL Transition")
     readonly property string roiTitle:                      qsTr("ROI")
     readonly property string actionListTitle:               qsTr("Action")
+    readonly property string fireTitle:                     qsTr("Fire")    //linxiaofeng
 
     readonly property string armMessage:                        qsTr("Arm the vehicle.")
     readonly property string forceArmMessage:                   qsTr("WARNING: This will force arming of the vehicle bypassing any safety checks.")
@@ -75,6 +76,8 @@ Item {
     readonly property string vtolTransitionFwdMessage:          qsTr("Transition VTOL to fixed wing flight.")
     readonly property string vtolTransitionMRMessage:           qsTr("Transition VTOL to multi-rotor flight.")
     readonly property string roiMessage:                        qsTr("Make the specified location a Region Of Interest.")
+    readonly property string fireMessage:                       qsTr("Fire the goddamn enemies.") //linxiaofeng
+    readonly property string actionMessage:                     qsTr("Continue following and catching.")
 
     readonly property int actionRTL:                        1
     readonly property int actionLand:                       2
@@ -100,6 +103,7 @@ Item {
     readonly property int actionROI:                        22
     readonly property int actionActionList:                 23
     readonly property int actionForceArm:                   24
+    readonly property int actionFire:                       25 //linxiaofeng
 
     property var    _activeVehicle:             QGroundControl.multiVehicleManager.activeVehicle
     property bool   _useChecklist:              QGroundControl.settingsManager.appSettings.useChecklist.rawValue && QGroundControl.corePlugin.options.preFlightChecklistUrl.toString().length
@@ -122,6 +126,7 @@ Item {
     property bool showLandAbort:        _guidedActionsEnabled && _vehicleFlying && _fixedWingOnApproach
     property bool showGotoLocation:     _guidedActionsEnabled && _vehicleFlying
     property bool showActionList:       _guidedActionsEnabled && (showStartMission || showResumeMission || showChangeAlt || showLandAbort)
+    property bool showFire:             _guidedActionsEnabled && _activeVehicle.guidedModeSupported && _vehicleArmed //linxiaofeng
 
     // Note: The '_missionItemCount - 2' is a hack to not trigger resume mission when a mission ends with an RTL item
     property bool showResumeMission:    _activeVehicle && !_vehicleArmed && _vehicleWasFlying && _missionAvailable && _resumeMissionIndex > 0 && (_resumeMissionIndex < _missionItemCount - 2)
@@ -450,8 +455,19 @@ Item {
             confirmDialog.hideTrigger = Qt.binding(function() { return !showROI })
             break;
         case actionActionList:
-            actionList.show()
-            return
+            //actionList.show()
+            console.log("lai le laodi")
+            console.log(showImmediate)
+            confirmDialog.title = actionListTitle
+            confirmDialog.message = actionMessage
+            confirmDialog.hideTrigger = false
+            break
+
+        case actionFire:
+            confirmDialog.title = fireTitle
+            confirmDialog.message = fireMessage
+            confirmDialog.hideTrigger = Qt.binding(function() { return !showFire })
+            break
         default:
             console.warn("Unknown actionCode", actionCode)
             return
@@ -532,6 +548,13 @@ Item {
             break
         case actionROI:
             _activeVehicle.guidedModeROI(actionData)
+            break
+        case actionFire:
+            _activeVehicle.guidedModeFire()
+            break
+        case actionActionList:
+            _activeVehicle.guidedModeBegin()
+            console.log("guidedModeBegin")
             break
         default:
             console.warn(qsTr("Internal error: unknown actionCode"), actionCode)

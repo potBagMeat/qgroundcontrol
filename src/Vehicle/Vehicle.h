@@ -339,6 +339,12 @@ public:
     /// Command vehicle to keep given point as ROI
     ///     @param centerCoord ROI coordinates
     Q_INVOKABLE void guidedModeROI(const QGeoCoordinate& centerCoord);
+
+    /// Command vehicle to fire the goddamn enemies, created by linxiaofeng
+    Q_INVOKABLE void guidedModeFire();
+    /// Command vehicle to continue task, created by linxiaofeng
+    Q_INVOKABLE void guidedModeBegin();
+
     Q_INVOKABLE void stopGuidedModeROI();
 
     /// Command vehicle to pause at current location. If vehicle supports guide mode, vehicle will be left

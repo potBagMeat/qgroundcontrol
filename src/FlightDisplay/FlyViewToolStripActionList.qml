@@ -28,7 +28,8 @@ ToolStripActionList {
         GuidedActionLand { },
         GuidedActionRTL { },
         GuidedActionPause { },
-        GuidedActionActionList { }
+        GuidedActionActionList { },
+        GuidedActionFire{ }
         //linxiaofeng add fire command.
     ]
 }

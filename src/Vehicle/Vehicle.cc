@@ -2358,6 +2358,37 @@ void Vehicle::guidedModeTakeoff(double altitudeRelative)
     _firmwarePlugin->guidedModeTakeoff(this, altitudeRelative);
 }
 
+void Vehicle::guidedModeFire() //created by linxiaofeng
+{
+
+    sendMavCommand(
+                defaultComponentId(),
+                MAV_CMD_USER_1,
+                true,                           // show error if fails
+                0,
+                0,    // Use default velocity
+                0,                              // Vehicle points to center
+                0,    // reserved
+                0,
+                0,
+                0);
+}
+void Vehicle::guidedModeBegin()
+{
+    sendMavCommand(
+                defaultComponentId(),
+                MAV_CMD_USER_1,
+                true,                           // show error if fails
+                1,    // param1 == 1, continue.
+                0,    // Use default velocity
+                0,                              // Vehicle points to center
+                0,    // reserved
+                0,
+                0,
+                0);
+
+}
+
 double Vehicle::minimumTakeoffAltitude()
 {
     return _firmwarePlugin->minimumTakeoffAltitude(this);

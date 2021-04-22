@@ -1103,7 +1103,7 @@ void ParameterManager::_checkInitialLoadComplete(void)
     for (int componentId: _waitingReadParamIndexMap.keys()) {
         if (_waitingReadParamIndexMap[componentId].count()) {
             // We are still waiting on some parameters, not done yet
-            return;
+            return; //linxiaofeng
         }
     }
 
@@ -1176,6 +1176,14 @@ void ParameterManager::_initialRequestTimeout(void)
                                   "This will cause %2 to be unable to display its full user interface.").arg(_vehicle->id()).arg(qgcApp()->applicationName());
             qCDebug(ParameterManagerLog) << errorMsg;
             qgcApp()->showAppMessage(errorMsg);
+        }
+        else
+        {
+            QString errorMsg = tr("Vehicle %1 with generic autopilot did not respond to request for parameters. "
+                                  "This will cause %2 to be unable to display its full user interface.").arg(_vehicle->id()).arg(qgcApp()->applicationName());
+            qCDebug(ParameterManagerLog) << errorMsg;
+            qgcApp()->showAppMessage(errorMsg);
+
         }
     }
 }

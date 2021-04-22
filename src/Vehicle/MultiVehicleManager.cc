@@ -104,6 +104,12 @@ void MultiVehicleManager::_vehicleHeartbeatInfo(LinkInterface* link, int vehicle
     case MAV_TYPE_GIMBAL:
     case MAV_TYPE_ADSB:
         // These are not vehicles, so don't create a vehicle for them
+        qCDebug(MultiVehicleManagerLog()) << "Not a vehicle:vehicleId:componentId:vehicleFirmwareType:vehicleType "
+                                          << link->linkConfiguration()->name()
+                                          << vehicleId
+                                          << componentId
+                                          << vehicleFirmwareType
+                                          << vehicleType;
         return;
     default:
         // All other MAV_TYPEs create vehicles
@@ -139,6 +145,8 @@ void MultiVehicleManager::_vehicleHeartbeatInfo(LinkInterface* link, int vehicle
         qgcApp()->showAppMessage(tr("Connected to Vehicle %1").arg(vehicleId));
     } else {
         setActiveVehicle(vehicle);
+        qCDebug(MultiVehicleManagerLog())<<"set active vehicle";
+        //qgcApp()->showAppMessage(tr("Connected to Vehicle %1").arg(vehicleId)); //linxiaofeng
     }
 
 #if defined (__ios__) || defined(__android__)
@@ -279,9 +287,11 @@ void MultiVehicleManager::_setActiveVehiclePhase2(void)
     //-- Keep track of current vehicle's coordinates
     if(_activeVehicle) {
         disconnect(_activeVehicle, &Vehicle::coordinateChanged, this, &MultiVehicleManager::_coordinateChanged);
+        qCDebug(MultiVehicleManagerLog) << "disconnect";
     }
     if(_vehicleBeingSetActive) {
         connect(_vehicleBeingSetActive, &Vehicle::coordinateChanged, this, &MultiVehicleManager::_coordinateChanged);
+        qCDebug(MultiVehicleManagerLog) << "connect";
     }
 
     // Now we signal the new active vehicle
@@ -292,8 +302,13 @@ void MultiVehicleManager::_setActiveVehiclePhase2(void)
     if (_activeVehicle) {
         _activeVehicleAvailable = true;
         emit activeVehicleAvailableChanged(true);
-
+        /*
+        _parameterReadyVehicleAvailable = true; //linxiaofeng
+        emit parameterReadyVehicleAvailableChanged(true); //linxiaofeng
+        qCDebug(MultiVehicleManagerLog) << "flags are set"; // linxiaofeng
+        */
         if (_activeVehicle->parameterManager()->parametersReady()) {
+            qCDebug(MultiVehicleManagerLog) << "parameters are ready";
             _parameterReadyVehicleAvailable = true;
             emit parameterReadyVehicleAvailableChanged(true);
         }

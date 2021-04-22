@@ -1404,10 +1404,12 @@ void Vehicle::_handleHomePosition(mavlink_message_t& message)
 void Vehicle::_updateArmed(bool armed)
 {
     if (_armed != armed) {
+        //_trajectoryPoints->start(); //linxiaofeng
         _armed = armed;
         emit armedChanged(_armed);
         // We are transitioning to the armed state, begin tracking trajectory points for the map
         if (_armed) {
+            qCDebug(VehicleLog) << "trajectory start";  //linxiaofeng
             _trajectoryPoints->start();
             _flightTimerStart();
             _clearCameraTriggerPoints();
@@ -1465,7 +1467,7 @@ void Vehicle::_handleHeartbeat(mavlink_message_t& message)
 
     mavlink_msg_heartbeat_decode(&message, &heartbeat);
 
-    bool newArmed = heartbeat.base_mode & MAV_MODE_FLAG_DECODE_POSITION_SAFETY;
+    //bool newArmed = heartbeat.base_mode & MAV_MODE_FLAG_DECODE_POSITION_SAFETY; linxiaofeng
 
     // ArduPilot firmare has a strange case when ARMING_REQUIRE=0. This means the vehicle is always armed but the motors are not
     // really powered up until the safety button is pressed. Because of this we can't depend on the heartbeat to tell us the true
@@ -1473,13 +1475,20 @@ void Vehicle::_handleHeartbeat(mavlink_message_t& message)
     if (apmFirmware()) {
         if (!_apmArmingNotRequired() || !(_onboardControlSensorsPresent & MAV_SYS_STATUS_SENSOR_MOTOR_OUTPUTS)) {
             // If ARMING_REQUIRE!=0 or we haven't seen motor output status yet we use the hearbeat info for armed
-            _updateArmed(newArmed);
+            //_updateArmed(newArmed); linxiaofeng
         }
     } else {
         // Non-ArduPilot always updates from armed state in heartbeat
-        _updateArmed(newArmed);
+        //_updateArmed(newArmed); linxiaofeng
     }
-
+    // linxiaofeng: at first the _armed is false
+    /*
+    if (heartbeat.system_status == MAV_STATE_ACTIVE && _armed == false)
+    {
+        _updateArmed(true);
+        created and commented by linxiaofeng.
+    }
+    */
     if (heartbeat.base_mode != _base_mode || heartbeat.custom_mode != _custom_mode) {
         QString previousFlightMode;
         if (_base_mode != 0 || _custom_mode != 0){
@@ -2813,6 +2822,13 @@ void Vehicle::_handleCommandAck(mavlink_message_t& message)
         if (ack.result == MAV_RESULT_ACCEPTED) {
             _isROIEnabled = false;
             emit isROIEnabledChanged();
+        }
+    }
+    //linxiaofeng
+    if (ack.command == MAV_CMD_COMPONENT_ARM_DISARM){
+        if (ack.result == MAV_RESULT_ACCEPTED){
+            _updateArmed(!_armed); // change armed status
+
         }
     }
 

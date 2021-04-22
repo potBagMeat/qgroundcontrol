@@ -149,6 +149,7 @@ void APMParameterMetaData::loadParameterFactMetaDataFile(const QString& metaData
     qCDebug(APMParameterMetaDataLog) << "Loading parameter meta data:" << metaDataFile;
 
     QFile xmlFile(metaDataFile);
+    qCDebug(APMParameterMetaDataLog) << "Loading dji parameters" << xmlFile.exists();
     Q_ASSERT(xmlFile.exists());
 
     bool success = xmlFile.open(QIODevice::ReadOnly);

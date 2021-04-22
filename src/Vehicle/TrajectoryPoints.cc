@@ -38,9 +38,10 @@ void TrajectoryPoints::_vehicleCoordinateChanged(QGeoCoordinate coordinate)
             } else {
                 // The new position IS colinear with the last segment. Don't add a new point, just update
                 // the last point to be the new position.
+
                 _lastPoint = coordinate;
                 _points[_points.count() - 1] = QVariant::fromValue(coordinate);
-                emit updateLastPoint(coordinate);
+                emit updateLastPoint(coordinate);     //linxiaofeng
             }
         }
     } else {

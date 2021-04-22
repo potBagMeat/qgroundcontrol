@@ -29,5 +29,6 @@ ToolStripActionList {
         GuidedActionRTL { },
         GuidedActionPause { },
         GuidedActionActionList { }
+        //linxiaofeng add fire command.
     ]
 }

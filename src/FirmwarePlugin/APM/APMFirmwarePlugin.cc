@@ -599,6 +599,7 @@ QString APMFirmwarePlugin::_internalParameterMetaDataFile(Vehicle* vehicle)
 {
     switch (vehicle->vehicleType()) {
     case MAV_TYPE_QUADROTOR:
+        //return QStringLiteral("/home/iusl/qgroundcontrol/src/FirmwarePlugin/APM/DJIMetaData-mimic.xml"); // added by linxiaofeng for testing
     case MAV_TYPE_HEXAROTOR:
     case MAV_TYPE_OCTOROTOR:
     case MAV_TYPE_TRICOPTER:

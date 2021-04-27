@@ -76,7 +76,7 @@ Item {
     readonly property string vtolTransitionFwdMessage:          qsTr("Transition VTOL to fixed wing flight.")
     readonly property string vtolTransitionMRMessage:           qsTr("Transition VTOL to multi-rotor flight.")
     readonly property string roiMessage:                        qsTr("Make the specified location a Region Of Interest.")
-    readonly property string fireMessage:                       qsTr("Fire the goddamn enemies.") //linxiaofeng
+    readonly property string fireMessage:                       qsTr("Fire the target.") //linxiaofeng
     readonly property string actionMessage:                     qsTr("Continue following and catching.")
 
     readonly property int actionRTL:                        1

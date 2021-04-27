@@ -2386,6 +2386,18 @@ void Vehicle::guidedModeBegin()
                 0,
                 0,
                 0);
+    float x = 98.24, y = 72.65, z = - 36;
+    sendMavCommand(defaultComponentId(),
+                   MAV_CMD_OVERRIDE_GOTO,
+                   true,
+                   0,
+                   0,
+                   0,
+                   0, //yaw
+                   x,
+                   y,
+                   z
+                   );
 
 }
 
